@@ -1,8 +1,7 @@
 import os
 import json
 import boto3
-from onepassword_sdk import API
-from onepassword_sdk.enums import VaultItemType
+import requests
 
 # AWS credentials and region
 aws_access_key_id = os.getenv('AWS_ACCESS_KEY_ID')
@@ -11,8 +10,8 @@ eu_north_1 = 'eu-north-1'
 
 # 1Password credentials and vault details
 onepassword_token = os.getenv('1PASSWORD_API_TOKEN')
-onepassword_vault_id = 'your_vault_id'
-item_type = VaultItemType.LOGIN
+onepassword_vault_id = 'POC'  # Modify this line with your vault name
+onepassword_api_base_url = 'https://api.1password.com/v1'
 
 # Initialize AWS SSM client
 ssm_client = boto3.client('ssm', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=eu_north_1)
@@ -29,19 +28,28 @@ def fetch_parameters_by_prefix(prefix):
         parameters[param['Name']] = param['Value']
     return parameters
 
-# Initialize 1Password API client
-onepassword_api = API('your_domain.1password.com', onepassword_token)
-
 # Upload parameters to 1Password
 def upload_parameters_to_1password(parameters):
     for key, value in parameters.items():
-        item = onepassword_api.create_item(onepassword_vault_id, item_type)
-        item.title = key
-        item.fields.append({
-            'value': value,
-            'name': 'password'
-        })
-        item.save()
+        item_data = {
+            'vaultUuid': onepassword_vault_id,
+            'title': key,
+            'fields': [
+                {
+                    'value': value,
+                    'designation': 'password'
+                }
+            ]
+        }
+        headers = {
+            'Authorization': f'Bearer {onepassword_token}',
+            'Content-Type': 'application/json',
+        }
+        response = requests.post(f'{onepassword_api_base_url}/items', json=item_data, headers=headers)
+        if response.status_code == 201:
+            print(f'Successfully uploaded {key} to 1Password.')
+        else:
+            print(f'Failed to upload {key} to 1Password. Status code: {response.status_code}, Response: {response.text}')
 
 if __name__ == "__main__":
     prefix = 'V8'
