@@ -55,4 +55,4 @@ if __name__ == "__main__":
     prefix = 'V8'
     parameters = fetch_parameters_by_prefix(prefix)
     print(parameters)
-    #upload_parameters_to_1password(parameters)
+    upload_parameters_to_1password(parameters)
