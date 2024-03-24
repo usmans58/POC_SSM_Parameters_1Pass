@@ -26,6 +26,7 @@ def fetch_parameters_by_prefix(prefix):
     )
     for param in response['Parameters']:
         parameters[param['Name']] = param['Value']
+        print(f'Parameter Name: {param["Name"]}, Value: {param["Value"]}')
     return parameters
 
 # Upload parameters to 1Password
