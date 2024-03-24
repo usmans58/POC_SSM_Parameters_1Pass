@@ -46,6 +46,7 @@ def upload_parameters_to_1password(parameters):
             'Content-Type': 'application/json',
         }
         response = requests.post(f'{onepassword_api_base_url}/items', json=item_data, headers=headers)
+        print(response)
         if response.status_code == 201:
             print(f'Successfully uploaded {key} to 1Password.')
         else:
