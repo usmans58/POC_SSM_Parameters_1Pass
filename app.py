@@ -9,7 +9,7 @@ eu_north_1 = 'eu-north-1'
 
 # 1Password credentials and vault details
 onepassword_token = os.getenv('1PASSWORD_API_TOKEN')
-onepassword_vault_id = 'POC'  # Modify this line with your vault name
+onepassword_vault_id = 'POC' 
 onepassword_api_base_url = 'https://api.1password.com/v1'
 
 # Initialize AWS SSM client
@@ -32,7 +32,7 @@ def fetch_parameters_by_prefix(prefix):
 def upload_parameters_to_1password(parameters):
     for key, value in parameters.items():
         item_data = {
-            'vaultUuid': onepassword_vault_id,
+            'vaultUuid': 'z6lgp2vnfmmlufbwlhstji53vm',
             'title': key,
             'fields': [
                 {
