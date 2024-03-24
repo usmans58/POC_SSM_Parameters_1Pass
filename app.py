@@ -1,5 +1,4 @@
 import os
-import json
 import boto3
 import requests
 
@@ -20,7 +19,7 @@ ssm_client = boto3.client('ssm', aws_access_key_id=aws_access_key_id, aws_secret
 def fetch_parameters_by_prefix(prefix):
     parameters = {}
     response = ssm_client.get_parameters_by_path(
-        Path='/' + prefix,
+        Path='/',
         Recursive=True,
         WithDecryption=True
     )
