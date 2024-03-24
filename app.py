@@ -1,5 +1,6 @@
 import os
 import boto3
+import json
 import requests
 
 # AWS credentials and region
@@ -55,5 +56,5 @@ def upload_parameters_to_1password(parameters):
 if __name__ == "__main__":
     prefix = 'V8'
     parameters = fetch_parameters_by_prefix(prefix)
-    print(parameters)
+    print(parameters.items())
     upload_parameters_to_1password(parameters)
