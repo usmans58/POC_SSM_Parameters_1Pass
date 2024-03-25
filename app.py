@@ -2,7 +2,7 @@ import os
 import time
 import boto3
 import onepasswordconnectsdk
-from onepasswordconnectsdk.models import Field, GeneratorRecipe, Item
+from onepasswordconnectsdk.models import Field, GeneratorRecipe, Item,ItemVault
 
 
 
