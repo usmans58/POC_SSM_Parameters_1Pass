@@ -12,7 +12,7 @@ aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY')
 eu_north_1 = 'eu-north-1'
 
 # 1Password credentials and vault details
-op_connect_token = os.getenv("1PASSWORD_API_TOKEN")
+op_connect_token = os.getenv("ONEPASSWORD_API_TOKEN")
 default_vault = "POC"
 connect_host = "https://my.1password.com/home"
 
