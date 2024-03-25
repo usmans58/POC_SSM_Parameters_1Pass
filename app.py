@@ -1,7 +1,10 @@
 import os
+import time
 import boto3
-import json
-import requests
+import onepasswordconnectsdk
+from onepasswordconnectsdk.models import Field, GeneratorRecipe, Item
+
+
 
 # AWS credentials and region
 aws_access_key_id = os.getenv('AWS_ACCESS_KEY_ID')
@@ -9,9 +12,13 @@ aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY')
 eu_north_1 = 'eu-north-1'
 
 # 1Password credentials and vault details
-onepassword_token = os.getenv('1PASSWORD_API_TOKEN')
-onepassword_vault_id = 'POC' 
-onepassword_api_base_url = 'https://api.1password.com/v1'
+op_connect_token = os.getenv["1PASSWORD_API_TOKEN"]
+default_vault = "POC"
+connect_host = "https://my.1password.com/home"
+
+client = onepasswordconnectsdk.client.new_client_from_environment(connect_host)
+
+
 
 # Initialize AWS SSM client
 ssm_client = boto3.client('ssm', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=eu_north_1)
@@ -31,27 +38,24 @@ def fetch_parameters_by_prefix(prefix):
 
 # Upload parameters to 1Password
 def upload_parameters_to_1password(parameters):
+   
     for key, value in parameters.items():
-        item_data = {
-            'vaultUuid': 'z6lgp2vnfmmlufbwlhstji53vm',
-            'title': key,
-            'fields': [
-                {
-                    'value': value,
-                    'designation': 'password'
-                }
+        user_item = Item(
+            title= key,
+            category= 'LOGIN',
+            fields= [
+                Field(
+                    value= value,
+                    purpose= 'PASSWORD'
+                
+                )  
             ]
-        }
-        headers = {
-            'Authorization': f'Bearer {onepassword_token}',
-            'Content-Type': 'application/json',
-        }
-        response = requests.post(f'{onepassword_api_base_url}/items', json=item_data, headers=headers)
-        print(response)
-        if response.status_code == 201:
-            print(f'Successfully uploaded {key} to 1Password.')
-        else:
-            print(f'Failed to upload {key} to 1Password. Status code: {response.status_code}, Response: {response.text}')
+        )
+    posted_item = client.create_item(default_vault, user_item)
+    time.sleep(5)
+
+
+       
 
 if __name__ == "__main__":
     prefix = 'V8'
