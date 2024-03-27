@@ -21,12 +21,13 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install boto3 onepasswordconnectsdk
+          pip install boto3 PyGithub
 
       - name: Run Python script
         run: python app.py
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          1PASSWORD_API_TOKEN: ${{ secrets.ONEPASSWORD_API_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.POC_TOKEN}}
+          GITHUB_REPOSITORY: ${{ github.repository }}
           
