@@ -38,7 +38,9 @@ def upload_parameters_to_repo(parameters):
     repo_name = os.getenv('GITHUB_REPOSITORY')
     g = Github(github_token)
     repo = g.get_repo(repo_name)
-    repo.create_file('parameters.json', 'Upload parameters to repository', json.dumps(parameters), branch='main')
+    main_branch = repo.get_branch("main")
+    base_commit_sha = main_branch.commit.sha
+    repo.create_file('parameters.json', 'Upload parameters to repository', json.dumps(parameters), branch='main', sha=base_commit_sha)
     print('Parameters uploaded to repository successfully.')
 
        
