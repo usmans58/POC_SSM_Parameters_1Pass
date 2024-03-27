@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - 'app.py' 
 
 jobs:
   upload_parameters:
@@ -30,4 +32,3 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           GITHUB_TOKEN: ${{ secrets.POC_TOKEN}}
           GITHUB_REPOSITORY: ${{ github.repository }}
-          
