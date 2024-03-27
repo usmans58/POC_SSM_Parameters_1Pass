@@ -2,6 +2,8 @@ import os
 import json
 import boto3
 from github import Github
+from github import InputGitTreeElement
+
 
 
 
@@ -40,8 +42,12 @@ def upload_parameters_to_repo(parameters):
     repo = g.get_repo(repo_name)
     main_branch = repo.get_branch("main")
     base_commit_sha = main_branch.commit.sha
-    repo.create_file('parameters.json', 'Upload parameters to repository', json.dumps(parameters), branch='main', sha=base_commit_sha)
-    print('Parameters uploaded to repository successfully.')
+    
+    # Check if 'parameters.json' file exists in the repository
+    contents = repo.get_contents('parameters.json', ref='main')
+    
+    # Update the existing file if it exists
+    repo.update_file(contents.path, 'Update parameters', json.dumps(parameters), contents.sha, branch='main')
 
        
 
